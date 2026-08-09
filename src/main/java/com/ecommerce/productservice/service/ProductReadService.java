@@ -2,6 +2,7 @@ package com.ecommerce.productservice.service;
 
 import com.ecommerce.productservice.dto.ProductResponse;
 import com.ecommerce.productservice.entity.ProductEntity;
+import com.ecommerce.productservice.exception.ProductNotFoundException;
 import com.ecommerce.productservice.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,18 +18,19 @@ public class ProductReadService {
     private  ProductRepository repository;
 
     public ProductResponse getProductById(Long id) {
-        ProductEntity product = repository.findById(id).orElse(null);
-        if (product == null) {
-            return null;
-        }
+        ProductEntity product = repository.findById(id)
+                .orElseThrow(()->
+                        new ProductNotFoundException("Product not found with id : " + id)
+                );
+
         return mapToResponse(product);
     }
 
     public ProductResponse getProductBySku(String sku){
-        ProductEntity product = repository.findBySku(sku).orElse(null);
-        if(product == null){
-            return null;
-        }
+        ProductEntity product = repository.findBySku(sku)
+                .orElseThrow(() ->
+                new ProductNotFoundException("Product not found with sku: "  + sku)
+                );
         return mapToResponse(product);
     }
 
