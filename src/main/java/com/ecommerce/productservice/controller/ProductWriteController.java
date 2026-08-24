@@ -20,4 +20,16 @@ public class ProductWriteController {
         ProductResponse response = productWriteService.createProduct(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductResponse> updateProductById(@PathVariable Long id, @RequestBody ProductRequest request){
+        ProductResponse response = productWriteService.updateProductById(id, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<ProductResponse> updateProductByStatus(@PathVariable Long id, @RequestBody ProductRequest request){
+        ProductResponse response = productWriteService.updateProductByStatus(id, request);
+        return ResponseEntity.ok(response);
+    }
 }

@@ -3,6 +3,7 @@ package com.ecommerce.productservice.service;
 import com.ecommerce.productservice.dto.ProductRequest;
 import com.ecommerce.productservice.dto.ProductResponse;
 import com.ecommerce.productservice.entity.ProductEntity;
+import com.ecommerce.productservice.exception.ProductNotFoundException;
 import com.ecommerce.productservice.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,30 @@ public class ProductWriteService {
         ProductEntity savedProduct = repository.save(entity);
 
         return mapToResponse(savedProduct);
+    }
+
+    public ProductResponse updateProductById(Long id , ProductRequest request){
+        ProductEntity product = repository.findById(id)
+                .orElseThrow(() ->
+                    new ProductNotFoundException("Product not found for id:"+ id)
+                );
+        product.setName(request.getName());
+        product.setDescription(request.getDescription());
+        product.setPrice(request.getPrice());
+        product.setStatus(request.getStatus());
+        ProductEntity updatedProduct = repository.save(product);
+        return mapToResponse(updatedProduct);
+    }
+
+    public ProductResponse updateProductByStatus(Long id , ProductRequest request){
+        ProductEntity product = repository.findById(id)
+                .orElseThrow(() ->
+                        new ProductNotFoundException("Product not found for id:"+ id)
+                );
+        product.setStatus(request.getStatus());
+        product.setUpdatedAt(LocalDateTime.now());
+        ProductEntity updatedProduct = repository.save(product);
+        return mapToResponse(updatedProduct);
     }
 
     private ProductResponse mapToResponse(ProductEntity product) {
