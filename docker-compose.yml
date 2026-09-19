@@ -1,4 +1,5 @@
 services:
+
   product-db:
     image: postgres:16
     container_name: product-db
@@ -11,5 +12,18 @@ services:
     volumes:
       - product_data:/var/lib/postgresql/data
 
+  inventory-db:
+    image: postgres:16
+    container_name: inventory-db
+    environment:
+      POSTGRES_DB: inventory_db
+      POSTGRES_USER: inventory_user
+      POSTGRES_PASSWORD: inventory_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - inventory_data:/var/lib/postgresql/data
+
 volumes:
   product_data:
+  inventory_data:
